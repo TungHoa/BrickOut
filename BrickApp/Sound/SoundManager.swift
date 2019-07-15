@@ -7,8 +7,8 @@ class SoundManager {
     
     var audioPlayer: AVAudioPlayer?
     
-    func playSound(name: String){
-        let path: String = Bundle.main.path(forResource: name, ofType: ".mp3")!
+    func playSound(_ name: String){
+        let path: String = Bundle.main.path(forResource: name, ofType: ".wav")!
         
         let url: URL = URL(fileURLWithPath: path)
         
@@ -18,6 +18,10 @@ class SoundManager {
         }catch {
             print("loi")
         }
+    }
+    func gameTheme(){
+        playSound("gametheme")
+        audioPlayer?.numberOfLoops = -1
     }
    
 }
