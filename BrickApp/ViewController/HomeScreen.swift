@@ -90,7 +90,7 @@ class HomeScreen: UIViewController {
 }
     @objc func noob_tap(){
         let newViewController = MainScreen()
-        newViewController.cols = 1
+        newViewController.cols = 2
         newViewController.rows = 1
         newViewController.time = 0.005
         self.present(newViewController, animated: true, completion: nil)

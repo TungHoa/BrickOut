@@ -20,7 +20,7 @@ class SoundManager {
         }
     }
     func gameTheme(){
-        playSound("gametheme")
+        playSound("gametheme1")
         audioPlayer?.numberOfLoops = -1
     }
    

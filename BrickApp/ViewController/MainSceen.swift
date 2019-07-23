@@ -22,6 +22,8 @@ class MainScreen: UIViewController {
     var time: Double!
     var scoreCount :Int = 0
     
+    var timer1: Timer!
+    
     
     let scoreCountLabel: UILabel = {
         let score = UILabel()
@@ -114,17 +116,26 @@ class MainScreen: UIViewController {
         
         //phát hiện va chạm bóng với các ô gạch
         for b in brickWall{
+           
             if b.frame.intersects(ball.frame) {
+                dropBrick()
+
                 scoreCount += 10
                 scoreCountLabel.text = "Score:\(scoreCount)"
                 sound.playSound("break")
                 b.hardness -= 1
                 b.alpha = CGFloat(b.hardness)/2.0
+
+
                 if ball.center.x < b.frame.origin.x { ball.vx = -ball.vx }
                 else if ball.center.y < b.frame.origin.y { ball.vy = -ball.vy }
                 else if ball.center.x > b.frame.origin.x + b.frame.width { ball.vx = -ball.vx }
                 else { ball.vy = -ball.vy }
+                
+               
+                
                 if b.hardness == 0 {
+                    
                     b.removeFromSuperview()
                     brickWall.remove(b)
                     if brickWall.count == 0 {
@@ -133,16 +144,69 @@ class MainScreen: UIViewController {
                        
                     }
                 }
+                
             }
         }
        
 }
+    func dropBrick(){
+
+//        timer1 = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(brickDrop), userInfo: nil, repeats: true)
+        let randomBrick = brickWall.randomElement()
+        
+        if randomBrick != nil && randomBrick!.frame.intersects(ball.frame){
+            
+            if ball.center.x < randomBrick!.frame.origin.x { ball.vx = -ball.vx }
+            else if ball.center.y < randomBrick!.frame.origin.y { ball.vy = -ball.vy }
+            else if ball.center.x > randomBrick!.frame.origin.x + randomBrick!.frame.width { ball.vx = -ball.vx }
+            else { ball.vy = -ball.vy }
+                UIView.animate(withDuration: 1, animations: {randomBrick!.frame.origin.y += self.view.frame.height - randomBrick!.frame.origin.y - randomBrick!.frame.height - self.paddle.frame.height   })
+                { (_) in
+                    if randomBrick!.frame.intersects(self.paddle.frame){
+                    
+                        self.gameOver()
+                    }
+                    else{
+                    randomBrick!.removeFromSuperview()
+                    self.brickWall.remove(randomBrick!)
+                    }
+            }
+        
+            
+//             if brickWall.count == 0{gameWin()}
+        }
+       
+    }
+//    @objc func brickDrop(){
+//
+//        let randomBrick = brickWall.randomElement()
+//
+//        if randomBrick != nil{
+//
+//                UIView.animate(withDuration: 1, animations: {randomBrick!.frame.origin.y += self.view.frame.height - randomBrick!.frame.origin.y - randomBrick!.frame.height - self.paddle.frame.height   })
+//                { (_) in
+//                    if randomBrick!.frame.intersects(self.paddle.frame){
+//
+//                        self.gameOver()
+//                    }
+//                    else{
+//                        randomBrick!.removeFromSuperview()
+//                        self.brickWall.remove(randomBrick!)
+//                    }
+//                }
+//
+//
+//    }
+//
+//
+//    }
     
     //hàm khi game bắt đầu
     func gameStart(){
         buildBrickWall()
         initBallAndPaddle()
         setupLabel()
+        
         gamestart.center = CGPoint(x: view.center.x, y: view.bounds.height + gameover.bounds.height * 0.5)
         view.addSubview(gamestart)
         gameover.center = CGPoint(x: view.center.x, y: view.bounds.height + gameover.bounds.height * 0.5)
@@ -150,29 +214,41 @@ class MainScreen: UIViewController {
         gamewin.center = CGPoint(x: view.center.x, y: view.bounds.height + gamewin.bounds.height * 0.5)
         view.addSubview(gamewin)
       //Lên lịch một mục công việc để thực hiện tại thời điểm được chỉ định và trả về ngay lập tức.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
-            UIView.animate(withDuration: 2, animations: {
+        DispatchQueue.main.asyncAfter(deadline: .now() , execute: {
+            UIView.animate(withDuration: 1, animations: {
                 self.gamestart.center = self.view.center
                 let start = UITapGestureRecognizer(target: self, action: #selector(MainScreen.tapStart))
                 self.gamestart.addGestureRecognizer(start)
                 self.gamestart.isUserInteractionEnabled = true
                 self.soundTheme.gameTheme()
             }){ (_) in
+          
                 
+                
+               
             }
         })
+        
+        
 
     }
     @objc func tapStart(){
+        
         timer = Timer.scheduledTimer(timeInterval: time, target: self, selector: #selector(gameLoop), userInfo: nil, repeats: true)
         scoreCount = 0
         scoreCountLabel.text = "Score:\(scoreCount)"
         gamestart.removeFromSuperview()
+        
+       
+        
+       
     }
     //hàm khi thua game
     func gameOver(){
         timer.invalidate()
+        soundTheme.audioPlayer?.stop()
         sound.playSound("lose")
+        
         
       
         //code dưới đây xóa tất cả các phần tử khiến phần mềm bị crash
@@ -201,12 +277,14 @@ class MainScreen: UIViewController {
             self.gameover.removeFromSuperview()
             
             gameStart()
+           
         }
     }
     
     //hàm khi thắng game
     func gameWin(){
         timer.invalidate()
+        soundTheme.audioPlayer?.stop()
         sound.playSound("win" )
         self.ball.removeFromSuperview()
         self.paddle.removeFromSuperview()
