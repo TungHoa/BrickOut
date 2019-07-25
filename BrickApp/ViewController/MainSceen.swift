@@ -118,16 +118,24 @@ class MainScreen: UIViewController {
         for b in brickWall{
            
             if b.frame.intersects(ball.frame) {
-                dropBrick()
+                //dropBrick()
 
                 scoreCount += 10
                 scoreCountLabel.text = "Score:\(scoreCount)"
                 sound.playSound("break")
                 b.hardness -= 1
-                b.alpha = CGFloat(b.hardness)/2.0
+                b.alpha = CGFloat(b.hardness)/3.0
+                
+                if (ball.center.x < b.frame.origin.x && ball.center.y < b.frame.origin.y) ||
+                    (ball.center.x > b.frame.origin.x + b.frame.width && ball.center.y < b.frame.origin.y) ||
+                    (ball.center.x > b.frame.origin.x + b.frame.width && ball.center.y > b.frame.origin.y + b.frame.height) ||
+                    (ball.center.x < b.frame.origin.x && ball.center.y > b.frame.origin.y + b.frame.height) {
+                    ball.vx = -ball.vx
+                    ball.vy = -ball.vy
+                }
 
 
-                if ball.center.x < b.frame.origin.x { ball.vx = -ball.vx }
+                else if ball.center.x < b.frame.origin.x { ball.vx = -ball.vx }
                 else if ball.center.y < b.frame.origin.y { ball.vy = -ball.vy }
                 else if ball.center.x > b.frame.origin.x + b.frame.width { ball.vx = -ball.vx }
                 else { ball.vy = -ball.vy }
@@ -146,12 +154,14 @@ class MainScreen: UIViewController {
                 }
                 
             }
+            dropBrick()
+           
         }
        
 }
     func dropBrick(){
 
-//        timer1 = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(brickDrop), userInfo: nil, repeats: true)
+
         let randomBrick = brickWall.randomElement()
         
         if randomBrick != nil && randomBrick!.frame.intersects(ball.frame){
@@ -169,37 +179,16 @@ class MainScreen: UIViewController {
                     else{
                     randomBrick!.removeFromSuperview()
                     self.brickWall.remove(randomBrick!)
+                        if self.brickWall.count == 0{self.gameWin()}
+                        
                     }
             }
-        
-            
-//             if brickWall.count == 0{gameWin()}
+
+           
         }
        
     }
-//    @objc func brickDrop(){
-//
-//        let randomBrick = brickWall.randomElement()
-//
-//        if randomBrick != nil{
-//
-//                UIView.animate(withDuration: 1, animations: {randomBrick!.frame.origin.y += self.view.frame.height - randomBrick!.frame.origin.y - randomBrick!.frame.height - self.paddle.frame.height   })
-//                { (_) in
-//                    if randomBrick!.frame.intersects(self.paddle.frame){
-//
-//                        self.gameOver()
-//                    }
-//                    else{
-//                        randomBrick!.removeFromSuperview()
-//                        self.brickWall.remove(randomBrick!)
-//                    }
-//                }
-//
-//
-//    }
-//
-//
-//    }
+
     
     //hàm khi game bắt đầu
     func gameStart(){
@@ -222,10 +211,7 @@ class MainScreen: UIViewController {
                 self.gamestart.isUserInteractionEnabled = true
                 self.soundTheme.gameTheme()
             }){ (_) in
-          
-                
-                
-               
+ 
             }
         })
         

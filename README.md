@@ -7,6 +7,7 @@
 1. Sử dụng ở chế độ  Potrait
 2. Có 3 mức chơi noob(1 ô ,1 hàng và tốc độ bóng bay chậm) - easy - hard (nhiều gạch hơn , tốc độ bóng bay nhanh hơn)
 3. Có âm thanh phát ra khi chơi
+4. Có ngẫu nhiên gạch với khi va chạm với bóng
 
 # Các bước tiến hành 
 1. Tạo 1 timer để chạy vòng lặp game.   
@@ -21,7 +22,7 @@
     Nếu không đỡ được bóng và rơi xuống dưới  thanh đỡ thì thua
     
     2. Nếu thua thì chơi chơi lại , thắng thì về màn hình home chọn mức chơi
-    Gạch có 2 loại , màu sáng với cứng hơn cần 2 lần va chạm , màu tối hơn chỉ cần 1 lần 
+    Gạch có 2 loại , màu sáng với cứng hơn cần nhiều  lần va chạm  gạch tối màu
     
     
     
