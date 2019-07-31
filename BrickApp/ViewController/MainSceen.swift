@@ -118,7 +118,7 @@ class MainScreen: UIViewController {
         for b in brickWall{
            
             if b.frame.intersects(ball.frame) {
-                //dropBrick()
+                
 
                 scoreCount += 10
                 scoreCountLabel.text = "Score:\(scoreCount)"
@@ -154,9 +154,10 @@ class MainScreen: UIViewController {
                 }
                 
             }
-            dropBrick()
+            //dropBrick()
            
         }
+        dropBrick()
        
 }
     func dropBrick(){
